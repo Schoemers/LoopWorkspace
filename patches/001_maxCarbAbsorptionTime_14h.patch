@@ -1,0 +1,12 @@
+diff --git a/Loop/Loop/Models/LoopConstants.swift b/Loop/Loop/Models/LoopConstants.swift
+index fb69c827..e185d498 100644
+--- a/Loop/Loop/Models/LoopConstants.swift
++++ b/Loop/Loop/Models/LoopConstants.swift
+@@ -22,6 +22,6 @@ enum LoopConstants {
+     static let validManualGlucoseEntryRange = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 10)...HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 600)
+     
+     static let minCarbAbsorptionTime = TimeInterval(minutes: 30)
+-    static let maxCarbAbsorptionTime = TimeInterval(hours: 8)
++    static let maxCarbAbsorptionTime = TimeInterval(hours: 14)
+     
+     static let maxCarbEntryPastTime = TimeInterval(hours: (-12))

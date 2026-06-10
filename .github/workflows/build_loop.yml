@@ -49,7 +49,7 @@ jobs:
               unknown_format=true
               echo "The GH_PAT secret does not have a known token format."
             fi
-            
+          
             # Attempt to capture the x-oauth-scopes scopes of the token.
             if ! scopes=$(curl -sS -f -I -H "Authorization: token $GH_PAT" https://api.github.com | { grep -i '^x-oauth-scopes:' || true; } | cut -d ' ' -f2- | tr -d '\r'); then
               failed=true
@@ -148,19 +148,19 @@ jobs:
   # creates new certs if the repository variable ENABLE_NUKE_CERTS == 'true'
   # only run if a build is planned
   check_certs:
-      needs: [check_status]
-      name: Check certificates
-      uses: ./.github/workflows/create_certs.yml
-      secrets: inherit
-      if: |
-        github.event_name == 'workflow_dispatch' ||
-          (vars.SCHEDULED_BUILD != 'false' && needs.check_status.outputs.IS_SECOND_IN_MONTH == 'true') ||
-          (vars.SCHEDULED_SYNC != 'false' && needs.check_status.outputs.NEW_COMMITS == 'true' )
+    needs: [ check_status ]
+    name: Check certificates
+    uses: ./.github/workflows/create_certs.yml
+    secrets: inherit
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+        (vars.SCHEDULED_BUILD != 'false' && needs.check_status.outputs.IS_SECOND_IN_MONTH == 'true') ||
+        (vars.SCHEDULED_SYNC != 'false' && needs.check_status.outputs.NEW_COMMITS == 'true' )
 
   # Builds Loop
   build:
     name: Build
-    needs: [check_certs, check_status]
+    needs: [ check_certs, check_status ]
     runs-on: macos-26
     permissions:
       contents: write
@@ -184,10 +184,19 @@ jobs:
       - name: Customize Loop
         run: |
 
+          /bin/bash -c "$(curl -fsSL \
+          https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)" \
+          future_carbs_4h \
+          now_line \
+          2hlollipop \
+          profiles \
+          basal_lock \
+          meal_days
+
           # LoopWorkspace patches
           # -applies any patches located in the LoopWorkspace/patches/ directory
           if $(ls ./patches/* &> /dev/null); then
-          git apply ./patches/* --allow-empty -v --whitespace=fix
+            git apply ./patches/* --allow-empty -v --whitespace=fix
           fi
 
           # Submodule Loop patches:
